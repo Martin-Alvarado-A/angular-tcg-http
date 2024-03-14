@@ -26,7 +26,7 @@ export class PostsService {
   fetchPosts() {
     console.log(`🔎 | PostsService | fetchPosts`);
 
-    this.http
+    return this.http
       .get<{ [key: string]: Post }>(`${this.BASE_URL}/posts.json`)
       .pipe(
         map((responseData) => {
@@ -39,9 +39,6 @@ export class PostsService {
           }
           return postArray;
         })
-      )
-      .subscribe((posts) => {
-        console.log(`🔎 | PostsService | fetchPosts > posts:`, posts);
-      });
+      );
   }
 }

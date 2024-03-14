@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
 
@@ -15,10 +13,10 @@ export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
   isFetching = false;
 
-  constructor(private http: HttpClient, private postService: PostsService) {}
+  constructor(private postService: PostsService) {}
 
   ngOnInit() {
-    this.postService.fetchPosts();
+    this.onFetchPosts();
   }
 
   onCreatePost(postData: Post) {
@@ -29,7 +27,13 @@ export class AppComponent implements OnInit {
 
   onFetchPosts() {
     // Send Http request
-    this.postService.fetchPosts();
+    this.isFetching = true;
+
+    this.postService.fetchPosts().subscribe((posts) => {
+      console.log(`🔎 | AppComponent | onFetchPosts > posts:`, posts);
+      this.isFetching = false;
+      this.loadedPosts = posts;
+    });
   }
 
   onClearPosts() {
