@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   BASE_URL =
     'https://angular-tcg-http-default-rtdb.europe-west1.firebasedatabase.app';
   loadedPosts: Post[] = [];
+  isFetching = false;
 
   constructor(private http: HttpClient) {}
 
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit {
   }
 
   private fetchPosts() {
+    this.isFetching = true;
     this.http
       .get<{ [key: string]: Post }>(`${this.BASE_URL}/posts.json`)
       .pipe(
@@ -58,6 +60,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe((posts) => {
         console.log(`🔎 | AppComponent | fetchPosts > posts:`, posts);
+        this.isFetching = false;
         this.loadedPosts = posts;
       });
   }
