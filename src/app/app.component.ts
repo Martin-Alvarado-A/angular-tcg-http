@@ -11,7 +11,7 @@ import { Post } from './post.model';
 export class AppComponent implements OnInit {
   BASE_URL =
     'https://angular-tcg-http-default-rtdb.europe-west1.firebasedatabase.app';
-  loadedPosts = [];
+  loadedPosts: Post[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
       )
       .subscribe((posts) => {
         console.log(`🔎 | AppComponent | fetchPosts > posts:`, posts);
+        this.loadedPosts = posts;
       });
   }
 }
