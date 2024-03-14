@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
   }
 
   onFetchPosts() {
-    // Send Http request
     this.isFetching = true;
 
     this.postService.fetchPosts().subscribe((posts) => {
@@ -37,6 +36,9 @@ export class AppComponent implements OnInit {
   }
 
   onClearPosts() {
-    // Send Http request
+    this.postService.deletePosts().subscribe(() => {
+      console.log(`🔎 | AppComponent | onClearPosts`);
+      this.loadedPosts = [];
+    });
   }
 }

@@ -41,4 +41,8 @@ export class PostsService {
         })
       );
   }
+
+  deletePosts() {
+    return this.http.delete(`${this.BASE_URL}/posts.json`);
+  }
 }
