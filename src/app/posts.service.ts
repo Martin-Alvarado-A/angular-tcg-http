@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { Post } from './post.model';
 
 @Injectable({ providedIn: 'root' })
@@ -45,6 +45,10 @@ export class PostsService {
             }
           }
           return postArray;
+        }),
+        catchError((errorRes) => {
+          // Send to analitycs server
+          return throwError(errorRes);
         })
       );
   }
