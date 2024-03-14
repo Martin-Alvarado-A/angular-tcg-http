@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent implements OnInit {
     'https://angular-tcg-http-default-rtdb.europe-west1.firebasedatabase.app';
   loadedPosts: Post[] = [];
   isFetching = false;
+  errorMsg: string = null;
 
   constructor(private postService: PostsService) {}
 
@@ -21,18 +23,23 @@ export class AppComponent implements OnInit {
 
   onCreatePost(postData: Post) {
     console.log(`🔎 | AppComponent | onCreatePost > postData:`, postData);
-    // Send Http request
     this.postService.createAndStorePosts(postData.title, postData.content);
   }
 
   onFetchPosts() {
     this.isFetching = true;
 
-    this.postService.fetchPosts().subscribe((posts) => {
-      console.log(`🔎 | AppComponent | onFetchPosts > posts:`, posts);
-      this.isFetching = false;
-      this.loadedPosts = posts;
-    });
+    this.postService.fetchPosts().subscribe(
+      (posts) => {
+        console.log(`🔎 | AppComponent | onFetchPosts > posts:`, posts);
+        this.isFetching = false;
+        this.loadedPosts = posts;
+      },
+      (error: HttpErrorResponse) => {
+        console.log(`🔎 | AppComponent | onFetchPosts > ERROR:`, error);
+        this.errorMsg = `${error.status}: ${error.error.error}`;
+      }
+    );
   }
 
   onClearPosts() {
