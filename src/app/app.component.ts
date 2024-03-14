@@ -47,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       (error: HttpErrorResponse) => {
         console.log(`🔎 | AppComponent | onFetchPosts > ERROR:`, error);
+        this.isFetching = false;
         this.errorMsg = `${error.status}: ${error.error.error}`;
       }
     );
@@ -57,5 +58,9 @@ export class AppComponent implements OnInit, OnDestroy {
       console.log(`🔎 | AppComponent | onClearPosts`);
       this.loadedPosts = [];
     });
+  }
+
+  onDismissError() {
+    this.errorMsg = null;
   }
 }
