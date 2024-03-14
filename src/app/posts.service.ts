@@ -1,12 +1,14 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Post } from './post.model';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Post } from './post.model';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   BASE_URL =
     'https://angular-tcg-http-default-rtdb.europe-west1.firebasedatabase.app';
+  error = new Subject<string>();
 
   constructor(private http: HttpClient) {}
 
@@ -15,12 +17,17 @@ export class PostsService {
 
     this.http
       .post<{ name: string }>(`${this.BASE_URL}/posts.json`, postData)
-      .subscribe((responseData) => {
-        console.log(
-          `🔎 | PostsService | createAndStorePosts > responseData:`,
-          responseData
-        );
-      });
+      .subscribe(
+        (responseData) => {
+          console.log(
+            `🔎 | PostsService | createAndStorePosts > responseData:`,
+            responseData
+          );
+        },
+        (error: HttpErrorResponse) => {
+          this.error.next(error.message);
+        }
+      );
   }
 
   fetchPosts() {

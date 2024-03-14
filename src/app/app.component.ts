@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   BASE_URL =
     'https://angular-tcg-http-default-rtdb.europe-west1.firebasedatabase.app';
+  private errorSub: Subscription;
   loadedPosts: Post[] = [];
   isFetching = false;
   errorMsg: string = null;
@@ -18,7 +20,15 @@ export class AppComponent implements OnInit {
   constructor(private postService: PostsService) {}
 
   ngOnInit() {
+    this.errorSub = this.postService.error.subscribe((errorMsg: string) => {
+      this.errorMsg = errorMsg;
+    });
+
     this.onFetchPosts();
+  }
+
+  ngOnDestroy(): void {
+    this.errorSub.unsubscribe();
   }
 
   onCreatePost(postData: Post) {
