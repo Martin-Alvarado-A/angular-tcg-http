@@ -51,6 +51,7 @@ export class PostsService {
           'Custom-Header': 'Hello',
         }),
         params: searchParams,
+        responseType: 'json',
       })
       .pipe(
         map((responseData) => {
@@ -74,6 +75,7 @@ export class PostsService {
     return this.http
       .delete(`${this.BASE_URL}/posts.json`, {
         observe: 'events',
+        responseType: 'text',
       })
       .pipe(
         tap((event) => {
