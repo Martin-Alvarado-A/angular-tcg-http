@@ -2,6 +2,7 @@ import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
+  HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
@@ -37,11 +38,16 @@ export class PostsService {
   fetchPosts() {
     console.log(`🔎 | PostsService | fetchPosts`);
 
+    let searchParams = new HttpParams();
+    searchParams = searchParams.set('print', 'pretty');
+    searchParams = searchParams.set('custom', 'key'); // Not a real param
+
     return this.http
       .get<{ [key: string]: Post }>(`${this.BASE_URL}/posts.json`, {
         headers: new HttpHeaders({
           'Custom-Header': 'Hello',
         }),
+        params: searchParams,
       })
       .pipe(
         map((responseData) => {
